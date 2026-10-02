@@ -1,7 +1,7 @@
 name: Auto Commit Pytest Logs
 
 on:
-  workflow_dispatch:  # Déclencheur manuel (tu cliques sur "Run workflow" dans GitHub)
+  workflow_dispatch:  # Déclencheur manuel (bouton "Run workflow")
 
 jobs:
   create_commit:
@@ -39,10 +39,12 @@ jobs:
           git add log_pytest.txt
           git commit -m "chore: mise à jour automatique des logs pytest"
           git push
-      # Etape 6 : Secret lon secret personnalisé
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Étape 6 (Bonus) : Afficher le secret personnalisé (masqué)
+      # Remarque : Chaque étape ("- name:") peut avoir SON PROPRE bloc "env:"
       - name: Afficher le secret (masqué)
         run: echo "Mon secret est $MON_SECRET"
         env:
           MON_SECRET: ${{ secrets.MON_SECRET_PERSONNALISE }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
