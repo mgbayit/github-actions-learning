@@ -39,5 +39,10 @@ jobs:
           git add log_pytest.txt
           git commit -m "chore: mise à jour automatique des logs pytest"
           git push
+      # Etape 6 : Secret lon secret personnalisé
+      - name: Afficher le secret (masqué)
+        run: echo "Mon secret est $MON_SECRET"
+        env:
+          MON_SECRET: ${{ secrets.MON_SECRET_PERSONNALISE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
