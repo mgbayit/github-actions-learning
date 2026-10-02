@@ -1,0 +1,43 @@
+name: Auto Commit Pytest Logs
+
+on:
+  workflow_dispatch:  # Déclencheur manuel (tu cliques sur "Run workflow" dans GitHub)
+
+jobs:
+  create_commit:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write  # Autorise le workflow à pousser du code
+    
+    steps:
+      # Étape 1 : Récupérer le code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Étape 2 : Installer Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      # Étape 3 : Installer pytest
+      - name: Install pytest
+        run: pip install pytest
+
+      # Étape 4 : Exécuter pytest et sauvegarder les logs
+      - name: Run pytest and save logs
+        run: |
+          python -m pytest > log_pytest.txt
+          echo "Logs générés le $(date)" >> log_pytest.txt
+
+      # Étape 5 : Configurer Git et pousser le fichier
+      - name: Commit and push log file
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add log_pytest.txt
+          git commit -m "chore: mise à jour automatique des logs pytest"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
